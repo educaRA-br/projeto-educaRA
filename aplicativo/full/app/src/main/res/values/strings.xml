@@ -1,0 +1,32 @@
+<resources>
+    <string name="nome_app" translatable="false">EducaRA</string>
+    <string name="versao_app" translatable="false">versão: 1.0</string>
+    <string name="explicacao_profundidade" translatable="false">Quando a profundidade está habilitada, objetos virtuais se adaptam melhor ao mundo real</string>
+    <string name="botao_profundidade_habilitada" translatable="false">Habilitado</string>
+    <string name="botao_profundidade_desabilitada" translatable="false">Disabilitado</string>
+    <string name="suporta_profundidade" translatable="false">Seu dispositivo suporta processamento de profundidade</string>
+    <string name="nao_suporta_profundidade" translatable="false">Seu dispositivo não suporta processamento de profundidade</string>
+    <string name="finalizado" translatable="false">Finalizado</string>
+    <string-array name="opcoes_profundidade" translatable="false">
+        <item>Processar profundidade</item>
+        <item>Mostrar mapa de profundidade</item>
+    </string-array>
+    <string name="posicionamento_instantaneo" translatable="false">Opções de posicionamento instantâneo</string>
+    <string-array name="opcoes_posicionamento_instantaneo" translatable="false">
+        <item>Habilita posicionamento instantâneo</item>
+    </string-array>
+
+    <string name="procurando_superficies" translatable="false">Procurando por superfícies...</string>
+    <string name="toque_superficie" translatable="false">Toque em alguma superfície para posicionar o objeto</string>
+
+    <string name="configuracoes">Configurações</string>
+    <string name="fragment_disciplinas">EducaRA - Disciplinas</string>
+    <string name="fragment_aulas">EducaRA - Aulas</string>
+    <string name="fragment_conteudos">EducaRA - Conteúdos</string>
+    <string name="proximo">Próximo</string>
+    <string name="anterior">Anterior</string>
+    <string name="botao_voltar">Voltar</string>
+    <string name="title_activity_visualizador">VisualizadorActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+</resources>

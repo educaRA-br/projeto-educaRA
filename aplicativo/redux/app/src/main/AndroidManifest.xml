@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/nome_app"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Edu"
+        android:usesCleartextTraffic="true" >
+        <activity
+            android:name="edu.ifba.educa_ra.ui.AberturaActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Edu.Splash" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="edu.ifba.educa_ra.ui.InicializacaoActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Edu.NoActionBar" >
+        </activity>
+        <activity
+            android:name="edu.ifba.educa_ra.ui.SeletorActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Edu.NoActionBar" >
+        </activity>
+        <activity
+            android:name="edu.ifba.educa_ra.visualizador.VisualizadorActivity"
+            android:exported="true"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Theme.Edu.Fullscreen" />
+        <activity
+            android:name="edu.ifba.educa_ra.ui.ErroActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Edu.NoActionBar" >
+        </activity>
+
+    </application>
+
+</manifest>

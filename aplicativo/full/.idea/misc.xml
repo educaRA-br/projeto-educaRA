@@ -1,0 +1,54 @@
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/drawable/fundo_abertura.xml" value="0.1025" />
+        <entry key="app/src/main/res/drawable/fundo_circular.xml" value="0.1025" />
+        <entry key="app/src/main/res/drawable/fundo_gradiente.xml" value="0.1025" />
+        <entry key="app/src/main/res/drawable/fundo_splash.xml" value="0.1085" />
+        <entry key="app/src/main/res/drawable/fundo_visualizador.xml" value="0.1015" />
+        <entry key="app/src/main/res/drawable/nome_app.xml" value="0.1085" />
+        <entry key="app/src/main/res/drawable/progresso_circular.xml" value="0.1025" />
+        <entry key="app/src/main/res/drawable/teste.xml" value="0.1025" />
+        <entry key="app/src/main/res/layout/abertura.xml" value="0.213768115942029" />
+        <entry key="app/src/main/res/layout/activity_erro.xml" value="0.213768115942029" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.17882472137791286" />
+        <entry key="app/src/main/res/layout/activity_seletor.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/layout/activity_visualizador.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/activity_visualizador_arcore.xml" value="0.23229166666666667" />
+        <entry key="app/src/main/res/layout/activity_visualizador_artoolkit.xml" value="0.23229166666666667" />
+        <entry key="app/src/main/res/layout/card_aula.xml" value="0.213768115942029" />
+        <entry key="app/src/main/res/layout/card_conteudo.xml" value="0.21422101449275363" />
+        <entry key="app/src/main/res/layout/card_disciplina.xml" value="0.36666666666666664" />
+        <entry key="app/src/main/res/layout/content_main.xml" value="0.203125" />
+        <entry key="app/src/main/res/layout/fragment_aulas.xml" value="0.19157608695652173" />
+        <entry key="app/src/main/res/layout/fragment_conteudo.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/layout/fragment_conteudos.xml" value="0.213768115942029" />
+        <entry key="app/src/main/res/layout/fragment_disciplinas.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/layout/fragment_first.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/layout/fragment_second.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/layout/fragmento_conteudo.xml" value="0.36770833333333336" />
+        <entry key="app/src/main/res/layout/navegador.xml" value="0.27708333333333335" />
+        <entry key="app/src/main/res/menu/menu_configuracao_visualizador.xml" value="0.2671875" />
+        <entry key="app/src/main/res/menu/menu_main.xml" value="0.3398148148148148" />
+        <entry key="app/src/main/res/menu/menu_seletor.xml" value="0.2671875" />
+        <entry key="app/src/main/res/menu/menu_visualizador.xml" value="0.2671875" />
+        <entry key="app/src/main/res/menu/settings_menu.xml" value="0.3398148148148148" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.141" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.36770833333333336" />
+      </ProjectState>
+    </option>
+  </component>
+</project>

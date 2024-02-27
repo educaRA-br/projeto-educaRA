@@ -1,0 +1,14 @@
+<resources>
+    <string name="nome_app" translatable="false">EducaRA</string>
+    <string name="versao_app" translatable="false">versão: 1.0 (Redux)</string>
+    <string name="posicionamento_instantaneo" translatable="false">Opções de posicionamento instantâneo</string>
+
+    <string name="configuracoes">Configurações</string>
+    <string name="fragment_disciplinas">EducaRA - Disciplinas</string>
+    <string name="fragment_aulas">EducaRA - Aulas</string>
+    <string name="fragment_conteudos">EducaRA - Conteúdos</string>
+    <string name="proximo">Próximo</string>
+    <string name="anterior">Anterior</string>
+    <string name="botao_voltar">Voltar</string>
+    <string name="title_activity_visualizador">VisualizadorActivity</string>
+</resources>

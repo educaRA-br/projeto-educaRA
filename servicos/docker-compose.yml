@@ -1,0 +1,45 @@
+version: '3.3'
+
+services:
+  servico:
+    image: educara/servico
+    container_name: servico
+    build: 
+      dockerfile: ./Dockerfile.servico
+      context: .
+    ports:
+      - '3001:3000'
+    volumes:
+      - ./servico:/servico
+    command: python3 /servico/servico.py
+    depends_on:
+      - objetos
+
+  # banco:
+  #   image: treeco/banco
+  #   container_name: banco
+  #   build: 
+  #     dockerfile: ./Dockerfile.banco
+  #     context: .
+  #   hostname: banco
+  #   volumes:
+  #     - ./banco:/docker-entrypoint-initdb.d
+  #   environment:
+  #     POSTGRES_USER: 'treeco'
+  #     POSTGRES_PASSWORD: 'FaGQFchCiSh4Cce3JjucFiu5z5ybtytm!'
+  #   ports:
+  #     - '3002:5432'
+
+  objetos:
+    image: educara/objetos
+    container_name: objetos
+    build: 
+      dockerfile: ./Dockerfile.objetos
+      context: .
+    hostname: objetos
+    volumes:
+      - './objetos:/usr/share/nginx/html'
+    ports:
+      - '3003:80'
+    expose:
+      - '3003'
