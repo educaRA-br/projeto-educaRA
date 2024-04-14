@@ -2,6 +2,7 @@
 package edu.ifba.educa_ra.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +17,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.ifba.educa_ra.R
 import edu.ifba.educa_ra.api.GetDisciplinas
+import edu.ifba.educa_ra.api.supabase
 import edu.ifba.educa_ra.databinding.FragmentDisciplinasBinding
+import edu.ifba.educa_ra.modelo.AulaModelo
 import edu.ifba.educa_ra.modelo.Disciplina
+import edu.ifba.educa_ra.modelo.DisciplinaModelo
+import io.github.jan.supabase.postgrest.from
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DisciplinaHolder(view: View) : RecyclerView.ViewHolder(view) {
     val card: CardView
@@ -37,9 +46,9 @@ class DisciplinaAdapter() :
     RecyclerView.Adapter<DisciplinaHolder>() {
 
     private lateinit var navegador: NavController
-    private lateinit var disciplinas: List<Disciplina>
+    private lateinit var disciplinas: List<DisciplinaModelo>
 
-    constructor(navegador: NavController, disciplinas: List<Disciplina>) : this() {
+    constructor(navegador: NavController, disciplinas: List<DisciplinaModelo>) : this() {
         this.navegador = navegador
         this.disciplinas = disciplinas
     }
@@ -88,10 +97,20 @@ class DisciplinasFragment : Fragment() {
         val layout = LinearLayoutManager(this.context)
         binding.disciplinas.layoutManager = layout
 
-        GetDisciplinas(::onDisciplinas).execute()
+//        GetDisciplinas(::onDisciplinas).execute()
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val disciplinas = withContext(Dispatchers.IO) {
+                    supabase.from("disciplina").select().decodeList<DisciplinaModelo>()
+                }
+                onDisciplinas(disciplinas)
+            } catch (e: Exception) {
+                Log.e("error", e.toString())
+            }
+        }
     }
 
-    private fun onDisciplinas(disciplinas: List<Disciplina>) {
+    private fun onDisciplinas(disciplinas: List<DisciplinaModelo>) {
         if (disciplinas.isEmpty()) {
             ErroActivity.exibirErro(this.requireActivity(), "disciplinas não encontradas")
         } else {

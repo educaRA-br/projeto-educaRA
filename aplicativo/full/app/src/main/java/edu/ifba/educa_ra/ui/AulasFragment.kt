@@ -5,6 +5,7 @@ package edu.ifba.educa_ra.ui
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,8 +21,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.ifba.educa_ra.R
 import edu.ifba.educa_ra.api.GetAulas
+import edu.ifba.educa_ra.api.supabase
 import edu.ifba.educa_ra.databinding.FragmentAulasBinding
 import edu.ifba.educa_ra.modelo.Aula
+import edu.ifba.educa_ra.modelo.AulaModelo
+import io.github.jan.supabase.postgrest.from
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Locale.filter
 
 class AulasHolder(view: View) : RecyclerView.ViewHolder(view) {
     val card: CardView
@@ -40,10 +49,10 @@ class AulasHolder(view: View) : RecyclerView.ViewHolder(view) {
 class AulasAdapter() :
     RecyclerView.Adapter<AulasHolder>() {
 
-    private lateinit var aulas: List<Aula>
+    private lateinit var aulas: List<AulaModelo>
     private lateinit var navegador: NavController
 
-    constructor(navegador: NavController, aulas: List<Aula>) : this() {
+    constructor(navegador: NavController, aulas: List<AulaModelo>) : this() {
         this.navegador = navegador
         this.aulas = aulas
     }
@@ -96,11 +105,28 @@ class AulasFragment : Fragment() {
         val layout = LinearLayoutManager(this.context)
         binding.aulas.layoutManager = layout
 
+//        GetAulas(idDisciplina!!, ::onAulas).execute()
         val idDisciplina = this.arguments?.getString("idDisciplina")
-        GetAulas(idDisciplina!!, ::onAulas).execute()
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val aulas = withContext(Dispatchers.IO) {
+                    supabase.from("aula").select() {
+                        filter {
+                            if (idDisciplina != null) {
+                                eq("disciplina_id", idDisciplina)
+                            }
+                        }
+                    }
+
+                }.decodeList<AulaModelo>()
+                onAulas(aulas)
+            } catch (e: Exception) {
+                Log.e("error", e.toString())
+            }
+        }
     }
 
-    private fun onAulas(aulas: List<Aula>) {
+    private fun onAulas(aulas: List<AulaModelo>) {
         if (aulas.isEmpty()) {
             ErroActivity.exibirErro(this.requireActivity(), "aulas não encontradas")
         } else {

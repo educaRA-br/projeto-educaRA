@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,10 +28,18 @@ import com.sceneform.VisualizadorARCoreActivity
 import edu.ifba.educa_ra.R
 import edu.ifba.educa_ra.api.GetConteudos
 import edu.ifba.educa_ra.api.GetObjeto
+import edu.ifba.educa_ra.api.supabase
 import edu.ifba.educa_ra.databinding.FragmentConteudosBinding
+import edu.ifba.educa_ra.modelo.AulaModelo
 import edu.ifba.educa_ra.modelo.Conteudo
+import edu.ifba.educa_ra.modelo.ConteudoModelo
 import edu.ifba.educa_ra.modelo.objetoSelecionado
 import edu.ifba.educa_ra.visualizador.VisualizadorActivity
+import io.github.jan.supabase.postgrest.from
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 
@@ -59,9 +68,9 @@ class ConteudosAdapter() :
 
     private lateinit var contexto: Context
     private lateinit var progresso: ProgressBar
-    private lateinit var conteudos: List<Conteudo>
+    private lateinit var conteudos: List<ConteudoModelo>
 
-    constructor(contexto: Context, progresso: ProgressBar, conteudos: List<Conteudo>) : this() {
+    constructor(contexto: Context, progresso: ProgressBar, conteudos: List<ConteudoModelo>) : this() {
         this.contexto = contexto
         this.progresso = progresso
         this.conteudos = conteudos
@@ -121,7 +130,7 @@ class ConteudosAdapter() :
         progresso.progress = passo * 20
     }
 
-    private fun indicarConteudoDisponivel(card: CardView, conteudo: Conteudo) {
+    private fun indicarConteudoDisponivel(card: CardView, conteudo: ConteudoModelo) {
         val arquivos = File("${contexto.filesDir.absolutePath}/objeto.${conteudo.id}")
 
         card.setCardBackgroundColor(
@@ -206,10 +215,28 @@ class ConteudosFragment : Fragment() {
         binding.conteudos.layoutManager = layout
 
         val idAula = this.arguments?.getString("idAula")
-        GetConteudos(idAula!!, ::onConteudos).execute()
+//        GetConteudos(idAula!!, ::onConteudos).execute()
+
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val conteudos = withContext(Dispatchers.IO) {
+                    supabase.from("conteudo").select() {
+                        filter {
+                            if (idAula != null) {
+                                eq("aula_id", idAula)
+                            }
+                        }
+                    }
+
+                }.decodeList<ConteudoModelo>()
+                onConteudos(conteudos)
+            } catch (e: Exception) {
+                Log.e("error", e.toString())
+            }
+        }
     }
 
-    private fun onConteudos(conteudos: List<Conteudo>) {
+    private fun onConteudos(conteudos: List<ConteudoModelo>) {
         if (conteudos.isEmpty()) {
             ErroActivity.exibirErro(this.requireActivity(), "conteúdos não encontrados")
         } else {

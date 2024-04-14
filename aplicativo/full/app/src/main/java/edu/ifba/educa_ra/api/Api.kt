@@ -5,6 +5,7 @@ import android.os.AsyncTask
 import android.util.Log
 import edu.ifba.educa_ra.modelo.Aula
 import edu.ifba.educa_ra.modelo.Conteudo
+import edu.ifba.educa_ra.modelo.ConteudoModelo
 import edu.ifba.educa_ra.modelo.Disciplina
 import org.json.JSONArray
 import org.json.JSONObject
@@ -221,7 +222,7 @@ class GetConteudos(private val idAula: String, private val onConteudos: KFunctio
 
 }
 
-class GetObjeto(private val conteudo: Conteudo,
+class GetObjeto(private val conteudo: ConteudoModelo,
                 private val diretorioApp: File,
                 private val onProgresso: KFunction1<Int, Unit>,
                 private val onObjeto: KFunction1<String, Unit>) :
@@ -232,10 +233,8 @@ class GetObjeto(private val conteudo: Conteudo,
         onProgresso(0)
 
         try {
-            if (isAlive()) {
-                val zip = getZip()
-                caminho = unzip(zip)
-            }
+            val zip = getZip()
+            caminho = unzip(zip)
         } catch (e: Exception) {
             Log.e("GetObjeto()", e.toString())
         }
@@ -244,7 +243,7 @@ class GetObjeto(private val conteudo: Conteudo,
     }
 
     private fun getZip(): File {
-        val url = URL("$URL_OBJETO/${conteudo.objeto}")
+        val url = URL(conteudo.objeto)
         val conn: HttpURLConnection = url.openConnection() as HttpURLConnection
         conn.setRequestProperty("content-type", "binary/data");
         conn.connectTimeout = 60000

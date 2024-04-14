@@ -14,6 +14,7 @@ import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.ArSceneView
 import com.google.ar.sceneform.SceneView
 import com.google.ar.sceneform.Sceneform
+import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.rendering.Renderable
 import com.google.ar.sceneform.ux.ArFragment
@@ -23,7 +24,6 @@ import edu.ifba.educa_ra.R
 import edu.ifba.educa_ra.modelo.objetoSelecionado
 import edu.ifba.educa_ra.ui.ErroActivity
 import edu.ifba.educa_ra.ui.exibirInfoObjetoSelecionado
-import kotlinx.android.synthetic.main.activity_visualizador.exibir_informacoes
 import java.lang.ref.WeakReference
 import java.util.function.Consumer
 import java.util.function.Function
@@ -56,7 +56,7 @@ class VisualizadorARCoreActivity : AppCompatActivity(), FragmentOnAttachListener
         })
 
         exibirInformacoes = this.findViewById(R.id.exibir_informacoes) as ImageButton
-        exibir_informacoes.setOnClickListener(View.OnClickListener {
+        exibirInformacoes.setOnClickListener(View.OnClickListener {
             exibirInfoObjetoSelecionado(this)
         })
 
@@ -76,7 +76,7 @@ class VisualizadorARCoreActivity : AppCompatActivity(), FragmentOnAttachListener
         val weakActivity: WeakReference<VisualizadorARCoreActivity> = WeakReference(this)
         ModelRenderable.builder()
             .setSource(this,
-                Uri.parse("file://${objetoSelecionado.caminho}/${objetoSelecionado.nome}.obj"))
+                Uri.parse("file://${objetoSelecionado.caminho}/${objetoSelecionado.nome}.glb"))
             .setIsFilamentGltf(true)
             .setAsyncLoadEnabled(true)
             .build()
@@ -99,6 +99,7 @@ class VisualizadorARCoreActivity : AppCompatActivity(), FragmentOnAttachListener
 
         val anchor: Anchor = hitResult!!.createAnchor()
         val anchorNode = AnchorNode(anchor)
+        anchorNode.localScale = Vector3(0.1f, 0.1f, 0.1f)
         anchorNode.parent = areaVisualizacao.arSceneView.scene
 
         val model = TransformableNode(areaVisualizacao.transformationSystem)

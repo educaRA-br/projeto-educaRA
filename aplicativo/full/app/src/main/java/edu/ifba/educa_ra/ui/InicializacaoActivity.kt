@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.ar.core.ArCoreApk
 import edu.ifba.educa_ra.R
 import edu.ifba.educa_ra.api.IsAlive
+import edu.ifba.educa_ra.databinding.ActivityInicializacaoBinding
 import edu.ifba.educa_ra.modelo.Disciplina
 import java.util.Timer
 import java.util.TimerTask
@@ -33,11 +34,12 @@ class InicializacaoHolder(view: View) : RecyclerView.ViewHolder(view) {
 class InicializacaoActivity : AppCompatActivity() {
 
     private lateinit var holder: InicializacaoHolder
+    private lateinit var binding: ActivityInicializacaoBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val view = layoutInflater.inflate(R.layout.activity_inicializacao, null)
+        binding = ActivityInicializacaoBinding.inflate(layoutInflater)
+        val view = binding.root
         holder = InicializacaoHolder(view)
 
         setContentView(view)
@@ -47,7 +49,7 @@ class InicializacaoActivity : AppCompatActivity() {
         super.onStart()
 
         informar("verificando")
-        executarComAtraso(timerTask { IsAlive(::onAlive).execute() })
+        executarComAtraso(timerTask { VerificarARCore(this@InicializacaoActivity, ::informarSobreARCore).execute() })
     }
 
     private fun onAlive(alive: Boolean) {
