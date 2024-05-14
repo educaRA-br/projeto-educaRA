@@ -24,21 +24,21 @@
             android:exported="true"
             android:theme="@style/Theme.Edu.NoActionBar" >
         </activity>
-        <activity
-            android:name="edu.ifba.educa_ra.ui.SeletorActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Edu.NoActionBar" >
-        </activity>
-        <activity
-            android:name="edu.ifba.educa_ra.visualizador.VisualizadorActivity"
-            android:exported="true"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/Theme.Edu.Fullscreen" />
-        <activity
-            android:name="edu.ifba.educa_ra.ui.ErroActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Edu.NoActionBar" >
-        </activity>
+<!--        <activity-->
+<!--            android:name="edu.ifba.educa_ra.ui.SeletorActivity"-->
+<!--            android:exported="true"-->
+<!--            android:theme="@style/Theme.Edu.NoActionBar" >-->
+<!--        </activity>-->
+<!--        <activity-->
+<!--            android:name="edu.ifba.educa_ra.visualizador.VisualizadorActivity"-->
+<!--            android:exported="true"-->
+<!--            android:configChanges="orientation|keyboardHidden|screenSize"-->
+<!--            android:theme="@style/Theme.Edu.Fullscreen" />-->
+<!--        <activity-->
+<!--            android:name="edu.ifba.educa_ra.ui.ErroActivity"-->
+<!--            android:exported="true"-->
+<!--            android:theme="@style/Theme.Edu.NoActionBar" >-->
+<!--        </activity>-->
 
     </application>
 

@@ -6,16 +6,21 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.ar.core.ArCoreApk
+import com.smk.educara_3d.VisualizadorActivity
+import com.smk.educara_arcore.VisualizadorARCoreActivity
+import com.smk.educara_screens.ui.DataHolder
+import com.smk.educara_screens.ui.DataHolder.Companion.objetoSelecionado
+import com.smk.educara_screens.ui.SelecaoActivity
 import edu.ifba.educa_ra.R
-import edu.ifba.educa_ra.api.IsAlive
 import edu.ifba.educa_ra.databinding.ActivityInicializacaoBinding
-import edu.ifba.educa_ra.modelo.Disciplina
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.timerTask
@@ -36,6 +41,7 @@ class InicializacaoActivity : AppCompatActivity() {
     private lateinit var holder: InicializacaoHolder
     private lateinit var binding: ActivityInicializacaoBinding
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityInicializacaoBinding.inflate(layoutInflater)
@@ -45,32 +51,67 @@ class InicializacaoActivity : AppCompatActivity() {
         setContentView(view)
     }
 
+    @RequiresApi(Build.VERSION_CODES.CUPCAKE)
     override fun onStart() {
         super.onStart()
 
-        informar("verificando")
-        executarComAtraso(timerTask { VerificarARCore(this@InicializacaoActivity, ::informarSobreARCore).execute() })
-    }
+        val objetoSelecionado = DataHolder.objetoSelecionado
 
-    private fun onAlive(alive: Boolean) {
-        informar(if (alive) "serviços disponíveis" else "serviços indisponíveis")
+        val bundle = Bundle().apply {
+            putString("nome", objetoSelecionado?.nome)
+            putString("detalhes", objetoSelecionado?.detalhes)
+            putString("caminho", objetoSelecionado?.caminho)
+        }
 
-        if (alive) {
-            executarComAtraso(timerTask { VerificarARCore(this@InicializacaoActivity, ::informarSobreARCore).execute() })
+        if (objetoSelecionado != null) {
+            val disponibilidade = ArCoreApk.getInstance().checkAvailability(this)
+        if (disponibilidade.isSupported) {
+            if (disponibilidade == ArCoreApk.Availability.SUPPORTED_INSTALLED) {
+                val visualizador = Intent(this, VisualizadorARCoreActivity::class.java).apply {
+                    putExtras(bundle)
+                }
+                startActivity(visualizador)
+            } else if (disponibilidade == ArCoreApk.Availability.SUPPORTED_NOT_INSTALLED ||
+                disponibilidade == ArCoreApk.Availability.SUPPORTED_APK_TOO_OLD) {
+                decidir(this, "Você precisa instalar ou atualizar o ARCore ou pode visualizar\n" +
+                        "diretamente caso o seu dispositivo não seja compatível.\n" +
+                        "O que deseja fazer?",
+                    "visualizar", { this.onVisualizarObjeto(this) }, "instalar",
+                    { this.onInstalarARCore(this) })
+            }
+        } else { // Unsupported or unknown.
+            ErroActivity.exibirErro(this, "seu dispositivo não suporta o ARCore")
+        }
+            DataHolder.objetoSelecionado = null
         } else {
-            executarComAtraso(timerTask {
-                ErroActivity.exibirErro(this@InicializacaoActivity, "falha na inicialização")
-                finish()
-            })
+            informar("verificando")
+            executarComAtraso(timerTask { VerificarARCore(this@InicializacaoActivity, ::informarSobreARCore).execute() })
         }
     }
+
+    private fun onInstalarARCore(activity: Activity) {
+        ArCoreApk.getInstance().requestInstall(activity, true)
+    }
+
+//    private fun onAlive(alive: Boolean) {
+//        informar(if (alive) "serviços disponíveis" else "serviços indisponíveis")
+//
+//        if (alive) {
+//            executarComAtraso(timerTask { VerificarARCore(this@InicializacaoActivity, ::informarSobreARCore).execute() })
+//        } else {
+//            executarComAtraso(timerTask {
+//                ErroActivity.exibirErro(this@InicializacaoActivity, "falha na inicialização")
+//                finish()
+//            })
+//        }
+//    }
 
     private fun informarSobreARCore(mensagem: String) {
         informar(mensagem)
 
         executarComAtraso(timerTask {
-            startActivity(Intent(this@InicializacaoActivity, SeletorActivity::class.java))
-            finish()
+            startActivity(Intent(this@InicializacaoActivity, SelecaoActivity::class.java))
+//            finish()
         })
     }
 
@@ -84,8 +125,21 @@ class InicializacaoActivity : AppCompatActivity() {
         holder.status.invalidate()
         holder.status.requestLayout()
     }
+
+    private fun onVisualizarObjeto(activity: Activity) {
+        val visualizador = Intent(activity, VisualizadorActivity::class.java)
+
+        visualizador.putExtra("object", objetoSelecionado?.nome)
+        visualizador.putExtra("model", "${objetoSelecionado?.caminho}/${objetoSelecionado?.nome}.obj")
+        visualizador.putExtra("texture", "${objetoSelecionado?.caminho}/${objetoSelecionado?.nome}.mtl")
+        visualizador.putExtra("immersiveMode", "false")
+        visualizador.putExtra("backgroundColor", "1 1 1 1.000")
+
+        activity?.startActivity(visualizador)
+    }
 }
 
+@RequiresApi(Build.VERSION_CODES.CUPCAKE)
 class VerificarARCore(private val contexto: Context, private val onInformacao: KFunction1<String, Unit>) :
     AsyncTask<Void, Void, String>() {
     override fun doInBackground(vararg params: Void?): String {
@@ -103,6 +157,7 @@ class VerificarARCore(private val contexto: Context, private val onInformacao: K
         return mensagem
     }
 
+    @RequiresApi(Build.VERSION_CODES.CUPCAKE)
     override fun onPostExecute(mensagem: String) {
         super.onPostExecute(mensagem)
 

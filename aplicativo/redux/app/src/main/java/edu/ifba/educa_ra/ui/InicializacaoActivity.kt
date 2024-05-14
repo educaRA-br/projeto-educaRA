@@ -2,14 +2,17 @@
 
 package edu.ifba.educa_ra.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.smk.educara_3d.VisualizadorActivity
+import com.smk.educara_screens.ui.DataHolder
+import com.smk.educara_screens.ui.SelecaoActivity
 import edu.ifba.educa_ra.R
-import edu.ifba.educa_ra.api.IsAlive
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.timerTask
@@ -40,25 +43,48 @@ class InicializacaoActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        informar("verificando")
-        executarComAtraso(timerTask { IsAlive(::onAlive).execute() })
-    }
+        val objetoSelecionado = DataHolder.objetoSelecionado
 
-    private fun onAlive(alive: Boolean) {
-        informar(if (alive) "serviços disponíveis" else "serviços indisponíveis")
+        if (objetoSelecionado != null) {
+            this.onVisualizarObjeto(this)
 
-        if (alive) {
-            executarComAtraso(timerTask {
-                startActivity(Intent(this@InicializacaoActivity, SeletorActivity::class.java))
-                finish()
-            })
         } else {
+            informar("verificando")
             executarComAtraso(timerTask {
-                ErroActivity.exibirErro(this@InicializacaoActivity, "falha na inicialização")
-                finish()
+                startActivity(Intent(this@InicializacaoActivity, SelecaoActivity::class.java))
+//                finish()
             })
         }
     }
+
+    private fun onVisualizarObjeto(activity: Activity) {
+        val visualizador = Intent(activity, VisualizadorActivity::class.java)
+
+        visualizador.putExtra("object", DataHolder.objetoSelecionado?.nome)
+        visualizador.putExtra("model", "${DataHolder.objetoSelecionado?.caminho}/${DataHolder.objetoSelecionado?.nome}.obj")
+        visualizador.putExtra("texture", "${DataHolder.objetoSelecionado?.caminho}/${DataHolder.objetoSelecionado?.nome}.mtl")
+        visualizador.putExtra("immersiveMode", "false")
+        visualizador.putExtra("backgroundColor", "1 1 1 1.000")
+
+        activity?.startActivity(visualizador)
+        DataHolder.objetoSelecionado = null
+    }
+
+//    private fun onAlive(alive: Boolean) {
+//        informar(if (alive) "serviços disponíveis" else "serviços indisponíveis")
+//
+//        if (alive) {
+//            executarComAtraso(timerTask {
+//                startActivity(Intent(this@InicializacaoActivity, SeletorActivity::class.java))
+//                finish()
+//            })
+//        } else {
+//            executarComAtraso(timerTask {
+//                ErroActivity.exibirErro(this@InicializacaoActivity, "falha na inicialização")
+//                finish()
+//            })
+//        }
+//    }
 
     private fun executarComAtraso(rotina: TimerTask) {
         Timer().schedule(rotina, 2000)

@@ -3,9 +3,9 @@ package edu.ifba.educa_ra.ui
 import android.content.Context
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import edu.ifba.educa_ra.modelo.objetoSelecionado
+import com.smk.educara_screens.modelo.ObjetoSelecionado
 
-fun exibirInfoObjetoSelecionado(contexto: Context) {
+fun exibirInfoObjetoSelecionado(contexto: Context, objetoSelecionado: ObjetoSelecionado) {
     val builder = AlertDialog.Builder(contexto)
     builder.setTitle(objetoSelecionado.nome)
     builder.setMessage(objetoSelecionado.detalhes)
