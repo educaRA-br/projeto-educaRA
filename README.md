@@ -8,7 +8,7 @@ Este repositório é um monorepo que contém:
 
 - **App Educara (FULL):** Versão completa do aplicativo com todos os recursos.
 - **App Educara (REDUX):** Versão reduzida do aplicativo com funcionalidades essenciais.
-- **Bibliotecas Autorais e de Terceiros:** Todas as bibliotecas necessárias, incluindo bibliotecas desenvolvidas especificamente para este projeto.
+- **Bibliotecas:** Todas as bibliotecas feitas para este projeto.
 
 ## Tecnologias Utilizadas
 
