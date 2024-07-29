@@ -47,6 +47,7 @@ git checkout v1-educara
 - Clique em "Run" para compilar e executar o aplicativo.
 
 ### Estrutura do Projeto
+```bash
 educara/
 │
 ├── aplicativo/
@@ -55,6 +56,7 @@ educara/
 │
 ├── libs-educara/      # Código fonte das Bibliotecas/Módulos
 └── README.md          # Documentação do projeto
+```
 
 🚧Projeto em desenvolvimento...
 
