@@ -1,5 +1,6 @@
 package com.smk.educara_arcore
 
+import android.animation.ValueAnimator
 import android.net.Uri
 import android.os.Bundle
 import android.view.MotionEvent
@@ -14,6 +15,7 @@ import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.ArSceneView
 import com.google.ar.sceneform.SceneView
 import com.google.ar.sceneform.Sceneform
+import com.google.ar.sceneform.math.Quaternion
 import com.google.ar.sceneform.math.Vector3
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.rendering.Renderable
@@ -34,6 +36,8 @@ class VisualizadorARCoreActivity() : AppCompatActivity(), FragmentOnAttachListen
     private lateinit var exibirInformacoes: ImageButton
     private var modelo: Renderable? = null
     private var objetoSelecionado: ObjetoSelecionado? = null
+    private var rotationAnimator: ValueAnimator? = null
+    private var isInteracting = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,10 +71,8 @@ class VisualizadorARCoreActivity() : AppCompatActivity(), FragmentOnAttachListen
             val detalhes = bundle.getString("detalhes")
             val caminho = bundle.getString("caminho")
 
-            // Criar o objeto ObjetoSelecionado a partir dos dados do Bundle
             objetoSelecionado = ObjetoSelecionado(nome!!, detalhes!!, caminho!!)
 
-            // Agora você pode usar objetoSelecionado para carregar o modelo, por exemplo
             carregarModelo()
         }
     }
@@ -119,6 +121,42 @@ class VisualizadorARCoreActivity() : AppCompatActivity(), FragmentOnAttachListen
         model.setRenderable(modelo)
             .animate(true).start()
         model.select()
+
+        // Desativar rotação manual do TransformableNode
+        model.rotationController.isEnabled = false
+
+        rotationAnimator = ValueAnimator.ofFloat(0f, 360f).apply {
+            duration = 30000 // Duração da rotação em milissegundos (30 segundos para uma rotação completa)
+            repeatCount = ValueAnimator.INFINITE
+            repeatMode = ValueAnimator.RESTART
+            addUpdateListener { animation ->
+                val animatedValue = animation.animatedValue as Float
+                model.localRotation = Quaternion.axisAngle(Vector3(0.0f, 1.0f, 0.0f), animatedValue)
+            }
+            start()
+        }
+
+        // Parar a rotação ao tocar no objeto e continuar ao soltar
+        model.setOnTouchListener { _, motionEvent ->
+            when (motionEvent.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    if (!isInteracting) {
+                        isInteracting = true
+                        rotationAnimator?.pause()
+                        model.rotationController.isEnabled = true
+                    }
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    if (isInteracting) {
+                        isInteracting = false
+                        rotationAnimator?.resume()
+                        model.rotationController.isEnabled = false
+                    }
+                }
+            }
+            false
+        }
+
     }
 
     override fun onSessionConfiguration(session: Session?, config: Config?) {

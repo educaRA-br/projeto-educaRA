@@ -16,6 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.smk.educara_screens.R
 import com.smk.educara_screens.api.supabase
+import com.smk.educara_screens.database.AppDatabase
+import com.smk.educara_screens.database.dao.AulaDao
+import com.smk.educara_screens.database.dao.DisciplinaDao
 import com.smk.educara_screens.databinding.FragmentDisciplinasBinding
 import com.smk.educara_screens.modelo.DisciplinaModelo
 import io.github.jan.supabase.postgrest.from
@@ -78,11 +81,18 @@ class DisciplinasFragment : Fragment() {
     private var _binding: FragmentDisciplinasBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var database: AppDatabase
+    private lateinit var disciplinaDao: DisciplinaDao
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDisciplinasBinding.inflate(inflater, container, false)
+
+        // Inicialize o banco de dados
+        database = AppDatabase.instancia(requireContext())
+        disciplinaDao = database.disciplinaDao()
 
         return binding.root
     }
@@ -99,6 +109,20 @@ class DisciplinasFragment : Fragment() {
                 val disciplinas = withContext(Dispatchers.IO) {
                     supabase.from("disciplina").select().decodeList<DisciplinaModelo>()
                 }
+
+                disciplinas.map { disciplina ->
+                    DisciplinaModelo(
+                        id = disciplina.id,
+                        nome = disciplina.nome,
+                        detalhes = disciplina.detalhes
+                    )
+
+                    disciplinaDao.salva(disciplina)
+                }
+
+                val disciplinasSalvas = disciplinaDao.buscaTodos()
+                println(disciplinasSalvas.toString())
+
                 onDisciplinas(disciplinas)
             } catch (e: Exception) {
                 Log.e("error", e.toString())
